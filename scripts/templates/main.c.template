@@ -1,0 +1,26 @@
+/**
+ * @file {{PROJECT_NAME}}.c
+ * @brief {{PROJECT_BRIEF}}
+ *
+ * @author obviousfancy
+ * @date {{DATE}}
+ *
+ * @board {{PICO_BOARD}}
+ * @sdk Raspberry Pi Pico SDK 2.2.0
+ */
+
+/* ─── Includes ─────────────────────────────────────────── */
+#include "pico/stdlib.h"
+{{INCLUDES}}
+
+/* ─── Defines ──────────────────────────────────────────── */
+// #define MY_PIN 0
+
+/* ─── Main ─────────────────────────────────────────────── */
+int main() {
+{{INIT_CODE}}
+    while (1) {
+        // TODO: lógica principal del proyecto
+
+    }
+}

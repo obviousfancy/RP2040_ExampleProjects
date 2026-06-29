@@ -1,0 +1,13 @@
+# Target labels
+ pioasmBuild
+# Source files and their labels
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/CMakeFiles/pioasmBuild
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/CMakeFiles/pioasmBuild.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/CMakeFiles/pioasmBuild-complete.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/src/pioasmBuild-stamp/pioasmBuild-build.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/src/pioasmBuild-stamp/pioasmBuild-configure.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/src/pioasmBuild-stamp/pioasmBuild-download.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/src/pioasmBuild-stamp/pioasmBuild-install.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/src/pioasmBuild-stamp/pioasmBuild-mkdir.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/src/pioasmBuild-stamp/pioasmBuild-patch.rule
+/home/obviousfancy/Documents/obviousfancy/RPPicoProjects/hello_world/build/pico-sdk/src/rp2_common/pico_cyw43_driver/pioasm/src/pioasmBuild-stamp/pioasmBuild-update.rule
