@@ -36,9 +36,10 @@ SCRIPTS_DIR  = Path(__file__).resolve().parent
 TEMPLATES_DIR = SCRIPTS_DIR / "templates"
 PICO_SDK_PATH = Path(os.environ.get("PICO_SDK_PATH", ""))
 
-# Directorio base donde se crean los proyectos
-# Por defecto: carpeta padre de /scripts (RPPicoProjects/)
-PROJECTS_DIR = SCRIPTS_DIR.parent
+# Nota: el directorio base donde se crean los proyectos YA NO es fijo.
+# Se calcula dinámicamente en main() como la carpeta actual (Path.cwd())
+# desde donde el usuario ejecuta pico-new, para que el default tenga
+# sentido sin importar dónde esté instalado el script.
 
 # ─────────────────────────────────────────────────────────────
 # MAPA DE PERIFÉRICOS
@@ -272,10 +273,15 @@ def main():
     selected_libs = [PERIPHERALS[p]["lib"] for p in selected_peripherals]
 
     # 5. Ruta del proyecto
-    default_path = str(PROJECTS_DIR)
+    # Default = carpeta actual desde donde se ejecuta pico-new (no una ruta
+    # fija de instalación). Así, si el usuario está parado en, por ejemplo,
+    # ~/Documents/Docs/RP2040_ExampleProjects/examples, ese es el default
+    # que ve — y si escribe algo encima (ej. le agrega "/i2cprojects"),
+    # esa subcarpeta se crea sola gracias al mkdir(parents=True) de abajo.
+    default_path = str(Path.cwd())
 
     ruta_str = questionary.text(
-        "Ruta donde crear el proyecto (Enter para usar la default):",
+        "Ruta donde crear el proyecto (Enter para usar la carpeta actual):",
         default=default_path,
         style=CLI_STYLE,
     ).ask()

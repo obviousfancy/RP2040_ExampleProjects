@@ -1,17 +1,29 @@
-cmake_minimum_required(VERSION 3.13)                    #Minimum version required for compile the project
+cmake_minimum_required(VERSION 3.13)
 
-include(pico_sdk_import.cmake)                          #Importing pico-sdk through the bridge file makeit into the main folder 
-# This allows us to use its functions and libraries
+include(pico_sdk_import.cmake)
 
-project(blink)                                    #Project name, make the output files with the name of the project
+# ─────────────────────────────────────────────
+# CONFIGURACIÓN DEL PROYECTO
+# Generado automáticamente por pico-new
+# ─────────────────────────────────────────────
+set(PROJECT_NAME    "blink")
+set(PROJECT_SOURCES "blink.c")
+set(PICO_BOARD      "pico")
 
-pico_sdk_init()                                         #init the SDK, configure the ARM toolchain and other settings
-# This is necessary to use pico-sdk functions in our project and always put after project name
+set(PROJECT_LIBS
+    pico_stdlib
+    hardware_gpio
+)
+# ─────────────────────────────────────────────
+# NO MODIFICAR DE AQUÍ EN ADELANTE
+# ─────────────────────────────────────────────
 
-add_executable(blink blink.c)               #Add executable file, the first argument is the output file name, the second argument is the source files
+project(${PROJECT_NAME})
 
-target_link_libraries(blink pico_stdlib hardware_gpio)        # This links all the libraries that are needed for our project to run properly. 
-#In this case, we only need pico-sdk libraries.
+pico_sdk_init()
 
-pico_add_extra_outputs(blink)                     #This adds extra outputs like ELF and HEX files to the build process
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
+target_link_libraries(${PROJECT_NAME} ${PROJECT_LIBS})
+
+pico_add_extra_outputs(${PROJECT_NAME})

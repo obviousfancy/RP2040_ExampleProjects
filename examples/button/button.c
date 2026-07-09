@@ -1,26 +1,33 @@
-#include <stdio.h>
 #include "pico/stdlib.h"
-#include "hardware/gpio.h"
+#include <stdio.h>
 
-#define LED_PIN 25 
-#define BUTTON_PIN 24
+#define LED_PIN    25
+#define BUTTON_PIN 14
 
-int main(){
+int main() {
+    stdio_init_all();
 
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
+
     gpio_init(BUTTON_PIN);
     gpio_set_dir(BUTTON_PIN, GPIO_IN);
+    gpio_pull_up(BUTTON_PIN);  // botón a GND: presionado = 0
 
-    gpio_pull_up(BUTTON_PIN); // Pull up the button to avoid floating state the Chinese Board doesn't have pull up resistor in the circuit
+    bool estado_anterior = true;  // true = no presionado (pull-up)
 
-    while(1){
-        if(gpio_get(BUTTON_PIN)){
-            gpio_put(LED_PIN, 0);
-        }else{
-            gpio_put(LED_PIN, 1);
+    while (true) {
+        bool estado_actual = gpio_get(BUTTON_PIN);
+
+        if (estado_actual != estado_anterior) {
+            sleep_ms(20);  // debounce: espera a que se estabilice
+            estado_actual = gpio_get(BUTTON_PIN);
+
+            if (estado_actual != estado_anterior) {
+                gpio_put(LED_PIN, !estado_actual);
+                printf("Boton %s\n", estado_actual ? "liberado" : "presionado");
+                estado_anterior = estado_actual;
+            }
         }
     }
-    
-    return 0;
 }
