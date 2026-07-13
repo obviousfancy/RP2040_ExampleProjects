@@ -1,5 +1,5 @@
 /**
- * @file {{PROJECT_NAME}}.c
+ * @file main.c
  * @brief {{PROJECT_BRIEF}}
  *
  * @author obviousfancy
@@ -18,10 +18,13 @@
 
 /* ─── Main ─────────────────────────────────────────────── */
 int main() {
-{{INIT_CODE}}
-stdio_init_all();
+    stdio_init_all();
+    {{INIT_CODE}}
+
     while (1) {
         // TODO: lógica principal del proyecto
 
     }
+    return 0;
 }
+

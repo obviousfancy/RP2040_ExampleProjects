@@ -78,7 +78,7 @@ PERIPHERALS = {
     "UART": {
         "lib":     "hardware_uart",
         "include": '#include "hardware/uart.h"',
-        "init":    "    stdio_init_all();\n    // uart_init(uart0, 115200);",
+        "init":    "       // uart_init(uart0, 115200);",
         "brief":   "UART — Comunicación serial asíncrona",
     },
     "ADC": {
@@ -98,6 +98,18 @@ PERIPHERALS = {
         "include": '#include "hardware/irq.h"',
         "init":    "    // irq_set_exclusive_handler(IRQ_NUM, handler);\n    // irq_set_enabled(IRQ_NUM, true);",
         "brief":   "IRQ — Interrupciones de hardware",
+    },
+    "MultiCore": {
+        "lib":     "pico_multicore",
+        "include" : '#include "pico/multicore.h"',
+        "init":    "    // multicore_launch_core1(core1_entry);\n    // multicore_fifo_push_blocking(&data);",
+        "brief":   "MultiCore — Multiples núcleos de procesador",
+    },
+    "PIO":{
+        "lib":     "hardware_pio",
+        "include" : '#include "hardware/pio.h\n #include "hardware/clocks.h"\n"',
+        "init":    " ",
+        "brief":   "PIO — Programación de periféricos",
     },
 }
 
@@ -128,8 +140,8 @@ def validate_project_name(name: str) -> bool | str:
     """Valida que el nombre sea válido para C y para el sistema de archivos."""
     if not name:
         return "El nombre no puede estar vacío"
-    if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', name):
-        return "Solo letras, números y guión bajo. Debe empezar con letra. Sin espacios."
+    if not re.match(r'^[a-zA-Z0-9][a-zA-Z0-9_]*$', name):
+        return "Solo letras, números y guión bajo. Sin espacios. No puede empezar con guión bajo."
     return True
 
 
@@ -326,9 +338,9 @@ def main():
     cmake_content = generate_cmake(project_name, board, selected_libs)
     (project_path / "CMakeLists.txt").write_text(cmake_content)
 
-    # archivo .c principal
+    # archivo .c principal (siempre main.c, independiente del nombre del proyecto)
     main_c_content = generate_main_c(project_name, board, selected_peripherals, brief)
-    (project_path / f"{project_name}.c").write_text(main_c_content)
+    (project_path / "main.c").write_text(main_c_content)
 
     # pico_sdk_import.cmake
     sdk_copied = copy_pico_sdk_import(project_path)
@@ -336,7 +348,7 @@ def main():
     # ─── Resumen final ───────────────────────────────────────
 
     print(f"\n  ✓ {project_path / 'CMakeLists.txt'}")
-    print(f"  ✓ {project_path / f'{project_name}.c'}")
+    print(f"  ✓ {project_path / 'main.c'}")
     if sdk_copied:
         print(f"  ✓ {project_path / 'pico_sdk_import.cmake'}")
 
