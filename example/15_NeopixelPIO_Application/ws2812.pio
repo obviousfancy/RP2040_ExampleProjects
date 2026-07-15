@@ -1,0 +1,50 @@
+; ws2812.pio
+; Genera el protocolo de un solo hilo de los LEDs direccionables WS2812/Neopixel.
+;
+; Cada bit se codifica como un pulso en alto de duracion variable dentro de un
+; periodo total de (T1 + T2 + T3) ciclos de la maquina de estados:
+;   bit 1 -> alto durante (T1 + T2) ciclos, bajo durante T3 ciclos
+;   bit 0 -> alto durante T1 ciclos,        bajo durante (T2 + T3) ciclos
+; Estos valores replican los tiempos verificados del ejemplo oficial de
+; pico-examples (pio/ws2812), compatibles con el datasheet del WS2812.
+
+.program ws2812
+.side_set 1
+
+.define public T1 2
+.define public T2 5
+.define public T3 3
+
+.wrap_target
+bitloop:
+    out x, 1       side 0 [T3 - 1] ; Saca el siguiente bit del OSR (autopull)
+    jmp !x do_zero side 1 [T1 - 1] ; Sube la linea; si el bit es 0, salta antes
+do_one:
+    jmp  bitloop   side 1 [T2 - 1] ; Bit 1: permanece en alto mas tiempo
+do_zero:
+    nop            side 0 [T2 - 1] ; Bit 0: baja antes
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+// freq: frecuencia de bit del protocolo WS2812 (800000 Hz tipico)
+static inline void ws2812_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
+    pio_gpio_init(pio, pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+
+    pio_sm_config config = ws2812_program_get_default_config(offset);
+    sm_config_set_sideset_pins(&config, pin);
+
+    // Los 24 bits de color (orden GRB) se cargan MSB primero; autopull cada 24 bits
+    sm_config_set_out_shift(&config, false, true, 24);
+    sm_config_set_fifo_join(&config, PIO_FIFO_JOIN_TX);
+
+    // (T1 + T2 + T3) ciclos de instruccion conforman un bit completo
+    float clk_div = clock_get_hz(clk_sys) / (freq * (ws2812_T1 + ws2812_T2 + ws2812_T3));
+    sm_config_set_clkdiv(&config, clk_div);
+
+    pio_sm_init(pio, sm, offset, &config);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}

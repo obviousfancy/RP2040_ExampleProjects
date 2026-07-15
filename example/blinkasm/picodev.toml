@@ -1,0 +1,7 @@
+[pico]
+board = "pico"
+
+[build]
+name = "blinkasm"
+build_dir = "build"
+sources = ["main.c"]

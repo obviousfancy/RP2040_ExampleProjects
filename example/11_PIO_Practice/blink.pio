@@ -1,0 +1,35 @@
+; blink.pio
+; Enciende y apaga un pin durante un numero de ciclos recibido por la FIFO
+
+.program blink
+
+    pull block          ; Espera el valor de retardo enviado desde C
+    out y, 32            ; Lo guarda en Y (se conserva durante toda la practica)
+
+.wrap_target
+    mov x, y             ; Recarga el contador regresivo desde Y
+    set pins, 1          ; Enciende el LED
+lp1:
+    jmp x-- lp1          ; Permanece encendido durante (Y + 1) ciclos
+
+    mov x, y             ; Recarga el contador regresivo desde Y
+    set pins, 0          ; Apaga el LED
+lp2:
+    jmp x-- lp2          ; Permanece apagado durante (Y + 1) ciclos
+.wrap                    ; Regresa al inicio del bucle, indefinidamente
+
+% c-sdk {
+static inline void blink_program_init(PIO pio, uint sm, uint offset, uint pin) {
+    pio_gpio_init(pio, pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+
+    pio_sm_config config = blink_program_get_default_config(offset);
+    sm_config_set_set_pins(&config, pin, 1);
+
+    // El divisor de reloj de la maquina de estados se deja en su valor por
+    // defecto (1.0, velocidad maxima); esta practica regula la frecuencia
+    // unicamente mediante el valor de retardo contado por software.
+
+    pio_sm_init(pio, sm, offset, &config);
+}
+%}
